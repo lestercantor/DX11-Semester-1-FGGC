@@ -66,10 +66,10 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     }
 
 	// Initialize the world matrix
-	XMStoreFloat4x4(&_world, XMMatrixIdentity());
+	XMStoreFloat4x4(&_sun, XMMatrixIdentity());
 
     // Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -3.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(2.0f, 10.0f, 0.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -360,6 +360,7 @@ HRESULT Application::InitDevice()
 
     if (FAILED(hr))
         return hr;
+
     // Defines depth/stencil buffer
     D3D11_TEXTURE2D_DESC depthStencilDesc;
 
@@ -422,7 +423,15 @@ HRESULT Application::InitDevice()
     if (FAILED(hr))
         return hr;
 
+    // Create a rasterizer state for wireframe rendering
+    D3D11_RASTERIZER_DESC wfdesc;
+    ZeroMemory(&wfdesc, sizeof(D3D11_RASTERIZER_DESC));
+    wfdesc.FillMode = D3D11_FILL_WIREFRAME;
+    wfdesc.CullMode = D3D11_CULL_NONE;
+    hr = _pd3dDevice->CreateRasterizerState(&wfdesc, &_wireFrame);
+
     return S_OK;
+
 }
 
 void Application::Cleanup()
@@ -441,6 +450,7 @@ void Application::Cleanup()
     if (_pd3dDevice) _pd3dDevice->Release();
     if (_depthStencilView) _depthStencilView->Release();
     if (_depthStencilBuffer) _depthStencilBuffer->Release();
+    if (_wireFrame) _wireFrame->Release();
 }
 
 void Application::Update()
@@ -466,8 +476,16 @@ void Application::Update()
     //
     // Animate the cube
     //
-    XMStoreFloat4x4(&_world, XMMatrixRotationX(t) * XMMatrixRotationY(t));
-    XMStoreFloat4x4(&_world2, XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, 0.0f, 1.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f));
+    XMStoreFloat4x4(&_sun, XMMatrixRotationY(t / 1.5));
+    // Animate planets
+    XMStoreFloat4x4(&_world1, XMMatrixRotationY(t * 1.3) * XMMatrixTranslation(15.0f, 0.0f, 1.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 1.1));
+    XMStoreFloat4x4(&_world2, XMMatrixRotationY(t * 1.4) * XMMatrixTranslation(11.0f, 0.0f, 1.1f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 1.2));
+    // Animate moons for first planet
+    XMStoreFloat4x4(&_moon1, XMMatrixRotationY(t * 4) * XMMatrixTranslation(6.0f, 0.0f, 0.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMLoadFloat4x4(&_world1));
+    XMStoreFloat4x4(&_moon2, XMMatrixRotationY(t * 10) * XMMatrixTranslation(5.0f, 0.0f, 0.0f) * XMMatrixScaling(0.7f, 0.7f, 0.7f) * XMMatrixRotationY(t * 1.2) * XMLoadFloat4x4(&_world1));
+    // Animate moons for second planet
+    XMStoreFloat4x4(&_moon3, XMMatrixRotationY(t * 5) * XMMatrixTranslation(6.0f, 0.0f, 0.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 0.8) * XMLoadFloat4x4(&_world2));
+    XMStoreFloat4x4(&_moon4, XMMatrixRotationY(t * 20) * XMMatrixTranslation(5.0f, 0.0f, 0.0f) * XMMatrixScaling(0.4f, 0.4f, 0.4f) * XMMatrixRotationY(t * 1.5) * XMLoadFloat4x4(&_world2));
 }
 
 void Application::Draw()
@@ -475,19 +493,20 @@ void Application::Draw()
     //
     // Clear the back buffer
     //
-    float ClearColor[4] = {0.0f, 0.125f, 0.3f, 1.0f}; // red,green,blue,alpha
+    float ClearColor[5] = {0.0f, 0.125f, 0.3f, 1.0f}; // red,green,blue,alpha
     _pImmediateContext->ClearRenderTargetView(_pRenderTargetView, ClearColor);
     _pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 
-	XMMATRIX world = XMLoadFloat4x4(&_world);
+
+	XMMATRIX sun = XMLoadFloat4x4(&_sun);
 	XMMATRIX view = XMLoadFloat4x4(&_view);
 	XMMATRIX projection = XMLoadFloat4x4(&_projection);
     //
     // Update variables
     //
     ConstantBuffer cb;
-	cb.mWorld = XMMatrixTranspose(world);
+	cb.mSun = XMMatrixTranspose(sun);
 	cb.mView = XMMatrixTranspose(view);
 	cb.mProjection = XMMatrixTranspose(projection);
 
@@ -496,20 +515,48 @@ void Application::Draw()
     //
     // Renders a triangle
     //
+    _pImmediateContext->RSSetState(_wireFrame);
 	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
 	_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
 	_pImmediateContext->DrawIndexed(36, 0, 0); 
-    
 
-    // Converts XMFloat4x4 to XMMatrix
-    world = XMLoadFloat4x4(&_world2);
-    cb.mWorld = XMMatrixTranspose(world);
+    // Converts XMFloat4x4 to XMMatrix and renders a new cube - first planet
+    sun = XMLoadFloat4x4(&_world1);
+    cb.mSun = XMMatrixTranspose(sun);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
     _pImmediateContext->DrawIndexed(36, 0, 0);
 
+    // Renders a third cube - second planet
+    sun = XMLoadFloat4x4(&_world2);
+    cb.mSun = XMMatrixTranspose(sun);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    // Renders a fourth cube - first moon
+    sun = XMLoadFloat4x4(&_moon1);
+    cb.mSun = XMMatrixTranspose(sun);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    // Renders a fifth cube - second moon
+    sun = XMLoadFloat4x4(&_moon2);
+    cb.mSun = XMMatrixTranspose(sun);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    // Renders a sixth cube - third moon
+    sun = XMLoadFloat4x4(&_moon3);
+    cb.mSun = XMMatrixTranspose(sun);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    // Renders a seventh cube - fourth moon
+    sun = XMLoadFloat4x4(&_moon4);
+    cb.mSun = XMMatrixTranspose(sun);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    _pImmediateContext->DrawIndexed(36, 0, 0);
     //
     // Present our back buffer to our front buffer
     //
