@@ -69,7 +69,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	XMStoreFloat4x4(&_sun, XMMatrixIdentity());
 
     // Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(2.0f, 10.0f, 0.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.1f, 10.0f, 0.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -430,6 +430,13 @@ HRESULT Application::InitDevice()
     wfdesc.CullMode = D3D11_CULL_NONE;
     hr = _pd3dDevice->CreateRasterizerState(&wfdesc, &_wireFrame);
 
+    // Create a rasterizer state for solid rendering
+    D3D11_RASTERIZER_DESC sdesc;
+    ZeroMemory(&sdesc, sizeof(D3D11_RASTERIZER_DESC));
+    sdesc.FillMode = D3D11_FILL_SOLID;
+    sdesc.CullMode = D3D11_CULL_NONE;
+    hr = _pd3dDevice->CreateRasterizerState(&sdesc, &_solid);
+
     return S_OK;
 
 }
@@ -451,10 +458,15 @@ void Application::Cleanup()
     if (_depthStencilView) _depthStencilView->Release();
     if (_depthStencilBuffer) _depthStencilBuffer->Release();
     if (_wireFrame) _wireFrame->Release();
+    if (_solid) _solid->Release();
 }
 
 void Application::Update()
 {
+    int matTrans;
+    int matRota;
+    int matScale;
+
     // Update our time
     static float t = 0.0f;
 
@@ -486,6 +498,26 @@ void Application::Update()
     // Animate moons for second planet
     XMStoreFloat4x4(&_moon3, XMMatrixRotationY(t * 5) * XMMatrixTranslation(6.0f, 0.0f, 0.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 0.8) * XMLoadFloat4x4(&_world2));
     XMStoreFloat4x4(&_moon4, XMMatrixRotationY(t * 20) * XMMatrixTranslation(5.0f, 0.0f, 0.0f) * XMMatrixScaling(0.4f, 0.4f, 0.4f) * XMMatrixRotationY(t * 1.5) * XMLoadFloat4x4(&_world2));
+
+    for (int i = 0; i < 100; i++) {
+        matTrans = rand() % 10 + 50;
+        matRota = rand() % 2 + 6;
+        matScale = rand() % 2 + 6;
+        XMStoreFloat4x4(&_asteroidBelt[i], XMMatrixRotationY(t * matRota) * XMMatrixTranslation(10.0f + matTrans, 0.0f, 0.0f) * XMMatrixScaling(0.9f / matScale, 0.9f / matScale, 0.9f / matScale) * XMMatrixRotationY(t + matTrans));
+    }
+
+    // Change rasterizer state with a key press
+    if (GetAsyncKeyState(VK_UP)) 
+        _pImmediateContext->RSSetState(_wireFrame);
+    
+    if (GetAsyncKeyState(VK_DOWN)) 
+        _pImmediateContext->RSSetState(_solid);
+    
+    if (GetAsyncKeyState(VK_LEFT)) {
+        for (int i = 0; i < 100; i++) {
+            XMStoreFloat4x4(&_asteroidBelt[i], XMLoadFloat4x4(&_asteroidBelt[i]) * XMMatrixRotationY(-t) * XMMatrixRotationY(-t));
+        }
+    }
 }
 
 void Application::Draw()
@@ -515,7 +547,6 @@ void Application::Draw()
     //
     // Renders a triangle
     //
-    _pImmediateContext->RSSetState(_wireFrame);
 	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
@@ -557,6 +588,15 @@ void Application::Draw()
     cb.mSun = XMMatrixTranspose(sun);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
     _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    // Renders 100 more cubes - asteroid belt
+    for (int i = 0; i < 100; i++) {
+        sun = XMLoadFloat4x4(&_asteroidBelt[i]);
+        cb.mSun = XMMatrixTranspose(sun);
+        _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+        _pImmediateContext->DrawIndexed(36, 0, 0);
+    }
+
     //
     // Present our back buffer to our front buffer
     //

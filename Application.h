@@ -5,6 +5,8 @@
 #include <d3dcompiler.h>
 #include <directxmath.h>
 #include <directxcolors.h>
+#include <stdlib.h>
+#include <time.h>
 #include "resource.h"
 
 using namespace DirectX;
@@ -40,11 +42,15 @@ private:
 	ID3D11Buffer*           _pIndexBuffer;
 	ID3D11Buffer*           _pConstantBuffer;
 	XMFLOAT4X4              _sun, _world1, _world2, _moon1, _moon2, _moon3, _moon4;
+	XMFLOAT4X4				_asteroidBelt[100];
 	XMFLOAT4X4              _view;
 	XMFLOAT4X4              _projection;
+	// Set up the depth/stencil buffer 
 	ID3D11DepthStencilView* _depthStencilView;
 	ID3D11Texture2D* _depthStencilBuffer;
+	// Set up render states
 	ID3D11RasterizerState* _wireFrame;
+	ID3D11RasterizerState* _solid;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
