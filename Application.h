@@ -19,9 +19,10 @@ struct SimpleVertex
 
 struct ConstantBuffer
 {
-	XMMATRIX mSun;
+	XMMATRIX mWorld;
 	XMMATRIX mView;
 	XMMATRIX mProjection;
+	float gTime;
 };
 
 class Application
@@ -38,19 +39,32 @@ private:
 	ID3D11VertexShader*     _pVertexShader;
 	ID3D11PixelShader*      _pPixelShader;
 	ID3D11InputLayout*      _pVertexLayout;
-	ID3D11Buffer*           _pVertexBuffer;
-	ID3D11Buffer*           _pIndexBuffer;
+
+	// Vertex and index buffers for cube
+	ID3D11Buffer*           _pVertexBufferCube;
+	ID3D11Buffer*           _pIndexBufferCube;
+	int cubeIndex = 36;
+
+	// Vertex and index buffers for pyramid
+	ID3D11Buffer* _pVertexBufferPyramid;
+	ID3D11Buffer* _pIndexBufferPyramid;
+	int pyramidIndex = 18;
+
 	ID3D11Buffer*           _pConstantBuffer;
 	XMFLOAT4X4              _sun, _world1, _world2, _moon1, _moon2, _moon3, _moon4;
 	XMFLOAT4X4				_asteroidBelt[100];
 	XMFLOAT4X4              _view;
 	XMFLOAT4X4              _projection;
+
 	// Set up the depth/stencil buffer 
 	ID3D11DepthStencilView* _depthStencilView;
 	ID3D11Texture2D* _depthStencilBuffer;
+
 	// Set up render states
 	ID3D11RasterizerState* _wireFrame;
 	ID3D11RasterizerState* _solid;
+
+	float gTime;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);

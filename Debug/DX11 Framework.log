@@ -1,12 +1,12 @@
 ﻿  Application.cpp
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(491,48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(493,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(493,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(494,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(494,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(497,154): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(499,153): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(500,154): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(551,48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(553,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(553,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(554,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(554,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(557,154): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(559,153): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(560,154): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   DX11 Framework.cpp
   Generating Code...
   DX11 Framework.vcxproj -> C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Debug\DX11 Framework.exe
