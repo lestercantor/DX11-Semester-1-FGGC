@@ -50,8 +50,13 @@ private:
 	ID3D11Buffer* _pIndexBufferPyramid;
 	int pyramidIndex = 18;
 
+	// Vertex and index buffers for flat plane
+	ID3D11Buffer* _pVertexBufferPlane;
+	ID3D11Buffer* _pIndexBufferPlane;
+	int planeIndex = 96;
+
 	ID3D11Buffer*           _pConstantBuffer;
-	XMFLOAT4X4              _sun, _world1, _world2, _moon1, _moon2, _moon3, _moon4;
+	XMFLOAT4X4              _sun, _world1, _world2, _moon1, _moon2, _moon3, _moon4, _plane;
 	XMFLOAT4X4				_asteroidBelt[100];
 	XMFLOAT4X4              _view;
 	XMFLOAT4X4              _projection;
