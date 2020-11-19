@@ -379,7 +379,11 @@
     <ClCompile Include="DX11 Framework.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DX11 Framework.fx" />
+    <None Include="DX11 Framework.fx">
+      <FileType>Document</FileType>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</EnableDebuggingInformation>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />

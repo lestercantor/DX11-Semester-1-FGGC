@@ -14,7 +14,7 @@ using namespace DirectX;
 struct SimpleVertex
 {
     XMFLOAT3 Pos;
-    XMFLOAT4 Color;
+	XMFLOAT3 Normal;
 };
 
 struct ConstantBuffer
@@ -22,7 +22,19 @@ struct ConstantBuffer
 	XMMATRIX mWorld;
 	XMMATRIX mView;
 	XMMATRIX mProjection;
+
+	XMFLOAT4 DiffuseMtrl;
+	XMFLOAT4 DiffuseLight;
+	XMFLOAT3 LightVecW;
 	float gTime;
+
+	XMFLOAT4 AmbientMtrl;
+	XMFLOAT4 AmbientLight;
+
+	XMFLOAT4 SpecularMtrl;
+	XMFLOAT4 SpecularLight;
+	XMFLOAT3 EyePosW;
+	float SpecularPower;
 };
 
 class Application
@@ -70,6 +82,19 @@ private:
 	ID3D11RasterizerState* _solid;
 
 	float gTime;
+
+	// Lighting Variables
+	XMFLOAT3 lightDirection;
+	XMFLOAT4 diffuseMaterial;
+	XMFLOAT4 diffuseLight;
+
+	XMFLOAT4 ambientMatieral;
+	XMFLOAT4 ambientLight;
+
+	XMFLOAT4 specularMaterial;
+	XMFLOAT4 specularLight;
+	XMFLOAT3 eyePosW;
+	float specularPower;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
