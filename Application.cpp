@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "DDSTextureLoader.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -74,8 +73,11 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	XMStoreFloat4x4(&_sun, XMMatrixIdentity());
     //XMStoreFloat4x4(&_plane, XMMatrixIdentity());
 
+    // Specular light position
+    eyePosW = XMFLOAT3(0.1f, 10.0f, 0.0f);
+
     // Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.1f, 10.0f, 0.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.1f, 5.0f, 0.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -100,13 +102,11 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     specularMaterial = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
     // Specular light colour (RGBA)
     specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-    // Specular light position
-    eyePosW = XMFLOAT3(0.1f, 10.0f, 0.0f);
     // Specular light power
     specularPower = 10.0f;
 
     // Load texture
-    CreateDDSTextureFromFile(_pd3dDevice, L"Crate_NRM.dds", nullptr, &_pTextureRV);
+    CreateDDSTextureFromFile(_pd3dDevice, L"Textures/Crate_COLOR.dds", nullptr, &_pTextureRV);
 
     // Create the sample state
     D3D11_SAMPLER_DESC sampDesc;

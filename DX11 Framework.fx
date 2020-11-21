@@ -46,36 +46,19 @@ VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL, float2 Tex : TEXCO
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 	
-	
-	/*output.Pos = mul( Pos, World );
-	output.Pos = mul( output.Pos, View );
-	output.Pos = mul( output.Pos, Projection );
-
-	// Convert from local space to world space
-	// W component of vector is 0 as vectors cannot be translated
-	float3 normalW = mul(float4(NormalL, 0.0f), World).xyz;
-    normalW = normalize(normalW);
-
-	// Transform vertex position to world space
-	float4 posW = mul(Pos, World);
-	output.PosW = posW.xyz;
-
-	// Transform to homogeneous clip space
-	float4 pos = mul(Pos, posW);
-	output.Pos = pos;*/
-	
-
+	// Converts from model space to world space
 	output.Pos = mul(Pos, World);
-	output.PosW = output.Pos;
+	// Converts from world space to view space
 	output.Pos = mul(output.Pos, View);
+	// Converts from view space to projection
 	output.Pos = mul(output.Pos, Projection);
-	//output.Tex = mul(output.Tex, output.PosW);
 	
 	// Convert from local space to world space
 	output.normalW = mul(float4(NormalL, 0.0f), World).xyz;
 	output.normalW = normalize(output.normalW);
 
 	output.Tex = Tex;
+
 	return output;
 }
 
@@ -85,6 +68,7 @@ VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL, float2 Tex : TEXCO
 //--------------------------------------------------------------------------------------
 float4 PS( VS_OUTPUT input ) : SV_Target
 {
+	float4 textureColor = txDiffuse.Sample(samLinear, input.Tex);
 	float3 toEye = normalize(EyePosW - input.PosW.xyz);
 
 	// Interpolated normals can become unnormal - so normalize
@@ -103,9 +87,8 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 	// Compute ambient lighting
 	float3 ambient = AmbientMtrl * AmbientLight;
 	// Compute diffuse lighting
-	float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
+	float3 diffuse = diffuseAmount * (textureColor * DiffuseMtrl * DiffuseLight).rgb;
 
-	float4 textureColor = txDiffuse.Sample(samLinear, input.Tex);
 	textureColor.rgb = (diffuse)+(ambient)+(specular);
 	textureColor.a = DiffuseMtrl.a;
 	
