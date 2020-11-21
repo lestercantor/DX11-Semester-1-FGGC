@@ -4,6 +4,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
+Texture2D txDiffuse : register(t0);
+SamplerState samLinear : register(s0);
+
 //--------------------------------------------------------------------------------------
 // Constant Buffer Variables
 //--------------------------------------------------------------------------------------
@@ -33,12 +36,13 @@ struct VS_OUTPUT
 	float4 Pos : SV_POSITION;
 	float3 normalW : NORMAL;
 	float3 PosW : POSITION;
+	float2 Tex : TEXCOORD0;
 };
 
 //--------------------------------------------------------------------------------------
 // Vertex Shader -- Implements Gouraud Shading using Diffuse lighting only
 //--------------------------------------------------------------------------------------
-VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL )
+VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL, float2 Tex : TEXCOORD )
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 	
@@ -65,12 +69,13 @@ VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL )
 	output.PosW = output.Pos;
 	output.Pos = mul(output.Pos, View);
 	output.Pos = mul(output.Pos, Projection);
-	//output.normalW = float4(1, 1, 1, 1);
-
+	//output.Tex = mul(output.Tex, output.PosW);
+	
 	// Convert from local space to world space
 	output.normalW = mul(float4(NormalL, 0.0f), World).xyz;
 	output.normalW = normalize(output.normalW);
 
+	output.Tex = Tex;
 	return output;
 }
 
@@ -86,9 +91,6 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 	input.normalW = normalize(input.normalW);
 
 	float diffuseAmount = max(dot(LightVecW, input.normalW), 0.0f);
-	float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
-
-	float3 ambient = AmbientMtrl * AmbientLight;
 
 	// Compute the reflection vector
 	float3 r = reflect(-LightVecW, input.normalW);
@@ -96,12 +98,16 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 	// Determine how much (if any) specular light makes it into the eye
 	float specularAmount = pow(max(dot(r, toEye), 0.0f), SpecularPower);
 
-	// Compute specular terms separately
+	// Compute specular lighting
 	float3 specular = specularAmount * (SpecularMtrl * SpecularLight).rgb;
+	// Compute ambient lighting
+	float3 ambient = AmbientMtrl * AmbientLight;
+	// Compute diffuse lighting
+	float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
 
-	float4 Color;
-	Color.rgb = (diffuse)+(ambient)+(specular);
-	Color.a = DiffuseMtrl.a;
-
-	return Color;
+	float4 textureColor = txDiffuse.Sample(samLinear, input.Tex);
+	textureColor.rgb = (diffuse)+(ambient)+(specular);
+	textureColor.a = DiffuseMtrl.a;
+	
+	return textureColor;
 }

@@ -12,10 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="DDSTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="DX11 Framework.cpp" />
+    <ClCompile Include="DDSTextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">
@@ -28,8 +30,19 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DX11 Framework.fx">
+    <FxCompile Include="DX11 Framework.fx">
       <Filter>Shaders</Filter>
-    </None>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\Crate_COLOR.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\Crate_NRM.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Textures\Crate_SPEC.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "DDSTextureLoader.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -104,6 +105,22 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     // Specular light power
     specularPower = 10.0f;
 
+    // Load texture
+    CreateDDSTextureFromFile(_pd3dDevice, L"Crate_NRM.dds", nullptr, &_pTextureRV);
+
+    // Create the sample state
+    D3D11_SAMPLER_DESC sampDesc;
+    ZeroMemory(&sampDesc, sizeof(sampDesc));
+    sampDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    sampDesc.MinLOD = 0;
+    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    _pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
+
 	return S_OK;
 }
 
@@ -154,6 +171,7 @@ HRESULT Application::InitShadersAndInputLayout()
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	UINT numElements = ARRAYSIZE(layout);
@@ -183,21 +201,21 @@ HRESULT Application::InitVertexBuffer()
     SimpleVertex cubeVertices[] =
     {
         // 0
-        { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT3(-0.4, 0.4, -0.2) },
+        { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT3(-0.4, 0.4, -0.2), XMFLOAT2(0.0f, 0.0f) },
         // 1
-        { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT3(0.25, 0.25, -0.5) },
+        { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT3(0.25, 0.25, -0.5), XMFLOAT2(1.0f, 0.0f) },
         // 2
-        { XMFLOAT3( -1.0f, -1.0f, -1.0f ), XMFLOAT3(-0.25, -0.25, -0.5) }, 
+        { XMFLOAT3( -1.0f, -1.0f, -1.0f ), XMFLOAT3(-0.25, -0.25, -0.5), XMFLOAT2(0.0f, 1.0f) },
         // 3
-        { XMFLOAT3( 1.0f, -1.0f, -1.0f ), XMFLOAT3(0.5, -0.25, -0.25) }, 
+        { XMFLOAT3( 1.0f, -1.0f, -1.0f ), XMFLOAT3(0.5, -0.25, -0.25), XMFLOAT2(1.0f, 1.0f) },
         // 4
-        { XMFLOAT3( 1.0f, -1.0f, 1.0f ), XMFLOAT3(0.25, -0.25, 0.5) }, 
+        { XMFLOAT3( 1.0f, -1.0f, 1.0f ), XMFLOAT3(0.25, -0.25, 0.5), XMFLOAT2(1.0f, 1.0f) },
         // 5
-        { XMFLOAT3( 1.0f, 1.0f, 1.0f ), XMFLOAT3(0.4, 0.4, 0.2) },  
+        { XMFLOAT3( 1.0f, 1.0f, 1.0f ), XMFLOAT3(0.4, 0.4, 0.2), XMFLOAT2(0.0f, 1.0f) },
         // 6
-        { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT3(-0.5, -0.5, 0.25) }, 
+        { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT3(-0.5, -0.5, 0.25), XMFLOAT2(1.0f, 0.0f) },
         // 7
-        { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT3(-0.25, 0.25, 0.5) },
+        { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT3(-0.25, 0.25, 0.5), XMFLOAT2(1.0f, 1.0f) },
     };
 
 	ZeroMemory(&bd, sizeof(bd));
@@ -217,11 +235,11 @@ HRESULT Application::InitVertexBuffer()
     //// Create vertex buffer for pyramid
     //SimpleVertex pyramidVertices[] =
     //{
-    //    { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-    //    { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-    //    { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-    //    { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-    //    { XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(0.3f, -0.33f, 0.3f) },
+    //    { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-0.22f, -0.5f, 0.22f) },
+    //    { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(-0.3f, -0.33f, -0.3f) },
+    //    { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.22f, -0.5f, -0.22f) },
+    //    { XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
     //};
 
     //ZeroMemory(&bd, sizeof(bd));
@@ -241,35 +259,35 @@ HRESULT Application::InitVertexBuffer()
     //// Create vertex buffer for flat plane
     //SimpleVertex planeVertices[] =
     //{
-    //    { XMFLOAT3(-6.0f, -1.0f, -6.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(-6.0f, -1.0f, -3.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(-6.0f, -1.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(-6.0f, -1.0f, 3.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(-6.0f, -1.0f, 6.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(-6.0f, -1.0f, -6.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+    //    { XMFLOAT3(-6.0f, -1.0f, -3.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+    //    { XMFLOAT3(-6.0f, -1.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+    //    { XMFLOAT3(-6.0f, -1.0f, 3.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+    //    { XMFLOAT3(-6.0f, -1.0f, 6.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
 
-    //    { XMFLOAT3(-3.0f, -1.0f, -6.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(-3.0f, -1.0f, -3.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(-3.0f, -1.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(-3.0f, -1.0f, 3.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(-3.0f, -1.0f, 6.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(-3.0f, -1.0f, -6.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+    //    { XMFLOAT3(-3.0f, -1.0f, -3.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+    //    { XMFLOAT3(-3.0f, -1.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+    //    { XMFLOAT3(-3.0f, -1.0f, 3.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+    //    { XMFLOAT3(-3.0f, -1.0f, 6.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
 
-    //    { XMFLOAT3(0.0f, -1.0f, -6.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(0.0f, -1.0f, -3.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(0.0f, -1.0f, 3.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(0.0f, -1.0f, 6.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, -1.0f, -6.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, -1.0f, -3.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, -1.0f, 3.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, -1.0f, 6.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
 
-    //    { XMFLOAT3(3.0f, -1.0f, -6.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(3.0f, -1.0f, -3.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(3.0f, -1.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(3.0f, -1.0f, 3.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(3.0f, -1.0f, 6.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(3.0f, -1.0f, -6.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(3.0f, -1.0f, -3.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(3.0f, -1.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(3.0f, -1.0f, 3.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(3.0f, -1.0f, 6.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
 
-    //    { XMFLOAT3(6.0f, -1.0f, -6.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(6.0f, -1.0f, -3.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(6.0f, -1.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(6.0f, -1.0f, 3.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-    //    { XMFLOAT3(6.0f, -1.0f, 6.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(6.0f, -1.0f, -6.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(6.0f, -1.0f, -3.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(6.0f, -1.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(6.0f, -1.0f, 3.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+    //    { XMFLOAT3(6.0f, -1.0f, 6.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
     //};
 
     //ZeroMemory(&bd, sizeof(bd));
@@ -688,7 +706,7 @@ void Application::Update()
     //
     // Animate the cube
     //
-    XMStoreFloat4x4(&_sun, XMMatrixRotationZ(t));
+    XMStoreFloat4x4(&_sun, XMMatrixRotationZ(t) * XMMatrixRotationY(t));
     // Animate planets
     XMStoreFloat4x4(&_world1, XMMatrixRotationY(t * 1.3) * XMMatrixTranslation(15.0f, 0.0f, 1.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 1.1));
     XMStoreFloat4x4(&_world2, XMMatrixRotationY(t * 1.4) * XMMatrixTranslation(11.0f, 0.0f, 1.1f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 1.2));
@@ -699,12 +717,12 @@ void Application::Update()
     //XMStoreFloat4x4(&_moon3, XMMatrixRotationY(t * 5) * XMMatrixTranslation(6.0f, 0.0f, 0.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 0.8) * XMLoadFloat4x4(&_world2));
     //XMStoreFloat4x4(&_moon4, XMMatrixRotationY(t * 20) * XMMatrixTranslation(5.0f, 0.0f, 0.0f) * XMMatrixScaling(0.4f, 0.4f, 0.4f) * XMMatrixRotationY(t * 1.5) * XMLoadFloat4x4(&_world2));
 
-    for (int i = 0; i < 100; i++) {
-        matTrans = rand() % 10 + 50;
-        matRota = rand() % 2 + 6;
-        matScale = rand() % 2 + 6;
-        XMStoreFloat4x4(&_asteroidBelt[i], XMMatrixRotationY(t * matRota) * XMMatrixTranslation(10.0f + matTrans, 0.0f, 0.0f) * XMMatrixScaling(0.9f / matScale, 0.9f / matScale, 0.9f / matScale) * XMMatrixRotationY(t + matTrans));
-    }
+    //for (int i = 0; i < 100; i++) {
+    //    matTrans = rand() % 10 + 50;
+    //    matRota = rand() % 2 + 6;
+    //    matScale = rand() % 2 + 6;
+    //    XMStoreFloat4x4(&_asteroidBelt[i], XMMatrixRotationY(t * matRota) * XMMatrixTranslation(10.0f + matTrans, 0.0f, 0.0f) * XMMatrixScaling(0.9f / matScale, 0.9f / matScale, 0.9f / matScale) * XMMatrixRotationY(t + matTrans));
+    //}
 
     // Change rasterizer state with a key press
     if (GetAsyncKeyState(VK_UP)) 
@@ -770,6 +788,8 @@ void Application::Draw()
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
 	_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
+    _pImmediateContext->PSSetShaderResources(0, 1, &_pTextureRV);
+    _pImmediateContext->PSSetSamplers(0, 1, &_pSamplerLinear);
 	_pImmediateContext->DrawIndexed(cubeIndex, 0, 0); 
 
     // Converts XMFloat4x4 to XMMatrix and renders a new cube - first planet

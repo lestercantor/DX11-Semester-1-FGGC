@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "resource.h"
+#include "DDSTextureLoader.h"
 
 using namespace DirectX;
 
@@ -15,6 +16,7 @@ struct SimpleVertex
 {
     XMFLOAT3 Pos;
 	XMFLOAT3 Normal;
+	XMFLOAT2 TexC;
 };
 
 struct ConstantBuffer
@@ -95,6 +97,10 @@ private:
 	XMFLOAT4 specularLight;
 	XMFLOAT3 eyePosW;
 	float specularPower;
+
+	// Texture variables
+	ID3D11ShaderResourceView* _pTextureRV = nullptr;
+	ID3D11SamplerState* _pSamplerLinear = nullptr;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);

@@ -1,1 +1,9 @@
-﻿  DX11 Framework.vcxproj -> C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Debug\DX11 Framework.exe
+﻿  Application.cpp
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(711,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(711,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(712,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(712,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(683,9): warning C4101: 'matScale': unreferenced local variable
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(682,9): warning C4101: 'matRota': unreferenced local variable
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(681,9): warning C4101: 'matTrans': unreferenced local variable
+  DX11 Framework.vcxproj -> C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Debug\DX11 Framework.exe
