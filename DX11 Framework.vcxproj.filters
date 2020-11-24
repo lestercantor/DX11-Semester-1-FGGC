@@ -41,8 +41,8 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DX11 Framework.fx">
+    <FxCompile Include="DX11 Framework.fx">
       <Filter>Shaders</Filter>
-    </None>
+    </FxCompile>
   </ItemGroup>
 </Project>

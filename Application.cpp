@@ -200,27 +200,60 @@ HRESULT Application::InitVertexBuffer()
     // Create vertex buffer for cube
     SimpleVertex cubeVertices[] =
     {
+        /*
         // 0
-        { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT3(-0.4, 0.4, -0.2), XMFLOAT2(0.0f, 0.0f) },
+        { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT3(-0.25, 0.25, 0.5), XMFLOAT2(0.0f, 0.0f) },
         // 1
-        { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT3(0.25, 0.25, -0.5), XMFLOAT2(1.0f, 0.0f) },
+        { XMFLOAT3( 1.0f, 1.0f, 1.0f ), XMFLOAT3(0.4, 0.4, 0.2), XMFLOAT2(1.0f, 0.0f) },
         // 2
-        { XMFLOAT3( -1.0f, -1.0f, -1.0f ), XMFLOAT3(-0.25, -0.25, -0.5), XMFLOAT2(0.0f, 1.0f) },
+        { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT3(-0.4, -0.4, 0.2), XMFLOAT2(0.0f, 1.0f) },
         // 3
-        { XMFLOAT3( 1.0f, -1.0f, -1.0f ), XMFLOAT3(0.5, -0.25, -0.25), XMFLOAT2(1.0f, 1.0f) },
-        // 4
         { XMFLOAT3( 1.0f, -1.0f, 1.0f ), XMFLOAT3(0.25, -0.25, 0.5), XMFLOAT2(1.0f, 1.0f) },
+        // 4
+        { XMFLOAT3( 1.0f, -1.0f, -1.0f ), XMFLOAT3(0.4, -0.4, -0.2), XMFLOAT2(1.0f, 1.0f) },
         // 5
-        { XMFLOAT3( 1.0f, 1.0f, 1.0f ), XMFLOAT3(0.4, 0.4, 0.2), XMFLOAT2(0.0f, 1.0f) },
+        { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT3(0.25, 0.25, -0.5), XMFLOAT2(0.0f, 1.0f) },
         // 6
-        { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT3(-0.5, -0.5, 0.25), XMFLOAT2(1.0f, 0.0f) },
+        { XMFLOAT3( -1.0f, -1.0f, -1.0f ), XMFLOAT3(-0.5, -0.5, -0.25), XMFLOAT2(1.0f, 0.0f) },
         // 7
-        { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT3(-0.25, 0.25, 0.5), XMFLOAT2(1.0f, 1.0f) },
+        { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT3(-0.4, 0.4, -0.2), XMFLOAT2(1.0f, 1.0f) },
+        */
+
+        // Face 1
+        { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-0.4, -0.4, 0.2), XMFLOAT2(0.0f, 0.0f) }, // 0
+        { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(0.25, -0.25, 0.5), XMFLOAT2(1.0f, 0.0f) }, // 1
+        { XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(-0.25, 0.25, 0.5), XMFLOAT2(0.0f, 1.0f) }, // 2
+        { XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.4, 0.4, 0.2), XMFLOAT2(1.0f, 1.0f) }, // 3
+        // Face 2 
+        { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(0.25, -0.25, 0.5), XMFLOAT2(0.0f, 0.0f) }, // 4
+        { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.4, -0.4, -0.2), XMFLOAT2(1.0f, 0.0f) },// 5
+        { XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.4, 0.4, 0.2), XMFLOAT2(0.0f, 1.0f) }, // 6
+        { XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(0.25, 0.25, -0.5), XMFLOAT2(1.0f, 1.0f) }, // 7
+        // Face 3
+        { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.4, -0.4, -0.2), XMFLOAT2(0.0f, 0.0f) }, // 8
+        { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(-0.5, -0.5, -0.25), XMFLOAT2(1.0f, 0.0f) }, // 9 
+        { XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(0.25, 0.25, -0.5), XMFLOAT2(0.0f, 1.0f) }, // 10
+        { XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(-0.4, 0.4, -0.2), XMFLOAT2(1.0f, 1.0f) }, // 11
+        // Face 4
+        { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(-0.5, -0.5, -0.25), XMFLOAT2(0.0f, 0.0f) }, // 12
+        { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-0.4, -0.4, 0.2), XMFLOAT2(1.0f, 0.0f) }, // 13
+        { XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(-0.4, 0.4, -0.2), XMFLOAT2(0.0f, 1.0f) }, // 14
+        { XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(-0.25, 0.25, 0.5), XMFLOAT2(1.0f, 1.0f) }, // 15
+        // Face 5
+        { XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(-0.25, 0.25, 0.5), XMFLOAT2(0.0f, 0.0f) }, // 16
+        { XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.4, 0.4, 0.2), XMFLOAT2(1.0f, 0.0f) }, // 17  
+        { XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(-0.4, 0.4, -0.2), XMFLOAT2(0.0f, 1.0f) }, // 18
+        { XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(0.25, 0.25, -0.5), XMFLOAT2(1.0f, 1.0f) }, // 19
+        // Face 6
+        { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(-0.5, -0.5, -0.25), XMFLOAT2(0.0f, 0.0f) }, // 20
+        { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.4, -0.4, -0.2), XMFLOAT2(1.0f, 0.0f) }, // 21
+        { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-0.4, -0.4, 0.2), XMFLOAT2(0.0f, 1.0f) }, // 22 
+        { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(0.25, -0.25, 0.5), XMFLOAT2(1.0f, 1.0f) }, // 23
     };
 
 	ZeroMemory(&bd, sizeof(bd));
     bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(SimpleVertex) * 8;
+    bd.ByteWidth = sizeof(SimpleVertex) * 24;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 
@@ -319,22 +352,22 @@ HRESULT Application::InitIndexBuffer()
     {
         // Face 1
         0,1,2,
-        1,3,2,
+        2,1,3,
         // Face 2
-        1,5,3,
-        5,4,3,
+        4,5,6,
+        6,5,7,
         // Face 3
-        5,7,4,
-        7,6,4,
+        8,9,10,
+        10,9,11,
         // Face 4
-        7,0,6,
-        0,2,6,
+        12,13,14,
+        14,13,15,
         // Face 5
-        7,5,0,
-        5,1,0,
+        16,17,18,
+        18,17,19,
         // Face 6
-        2,3,6,
-        3,4,6,
+        20,21,22,
+        22,21,23,
     };
 
 	ZeroMemory(&bd, sizeof(bd));
@@ -706,7 +739,7 @@ void Application::Update()
     //
     // Animate the cube
     //
-    XMStoreFloat4x4(&_sun, XMMatrixRotationZ(t) * XMMatrixRotationY(t));
+    XMStoreFloat4x4(&_sun, XMMatrixRotationX(t));
     // Animate planets
     XMStoreFloat4x4(&_world1, XMMatrixRotationY(t * 1.3) * XMMatrixTranslation(15.0f, 0.0f, 1.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 1.1));
     XMStoreFloat4x4(&_world2, XMMatrixRotationY(t * 1.4) * XMMatrixTranslation(11.0f, 0.0f, 1.1f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 1.2));
