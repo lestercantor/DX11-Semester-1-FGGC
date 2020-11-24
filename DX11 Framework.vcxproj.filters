@@ -13,11 +13,14 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="OBJLoader.h" />
+    <ClInclude Include="Structures.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="DX11 Framework.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="OBJLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">
@@ -41,8 +44,8 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="DX11 Framework.fx">
+    <None Include="DX11 Framework.fx">
       <Filter>Shaders</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
 </Project>

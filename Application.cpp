@@ -71,6 +71,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 
 	// Initialize the world matrix
 	XMStoreFloat4x4(&_sun, XMMatrixIdentity());
+    objMeshData = OBJLoader::Load("sphere.obj", _pd3dDevice);
     //XMStoreFloat4x4(&_plane, XMMatrixIdentity());
 
     // Specular light position
@@ -106,7 +107,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     specularPower = 10.0f;
 
     // Load texture
-    CreateDDSTextureFromFile(_pd3dDevice, L"Textures/Crate_COLOR.dds", nullptr, &_pTextureRV);
+  //CreateDDSTextureFromFile(_pd3dDevice, L"Textures/Crate_COLOR.dds", nullptr, &_pTextureRV);
 
     // Create the sample state
     D3D11_SAMPLER_DESC sampDesc;
@@ -120,6 +121,8 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     _pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
+
+    objMeshData = OBJLoader::Load("OBJ/torusKnot.obj", _pd3dDevice);
 
 	return S_OK;
 }
@@ -811,8 +814,8 @@ void Application::Draw()
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
     // Switch to cube buffers
-    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBufferCube, &stride, &offset);
-    _pImmediateContext->IASetIndexBuffer(_pIndexBufferCube, DXGI_FORMAT_R16_UINT, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
+    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     //
     // Renders a triangle
@@ -823,19 +826,19 @@ void Application::Draw()
 	_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
     _pImmediateContext->PSSetShaderResources(0, 1, &_pTextureRV);
     _pImmediateContext->PSSetSamplers(0, 1, &_pSamplerLinear);
-	_pImmediateContext->DrawIndexed(cubeIndex, 0, 0); 
+	_pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0); 
 
-    // Converts XMFloat4x4 to XMMatrix and renders a new cube - first planet
-    world = XMLoadFloat4x4(&_world1);
-    cb.mWorld = XMMatrixTranspose(world);
-    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-    _pImmediateContext->DrawIndexed(cubeIndex, 0, 0);
+    //// Converts XMFloat4x4 to XMMatrix and renders a new cube - first planet
+    //world = XMLoadFloat4x4(&_world1);
+    //cb.mWorld = XMMatrixTranspose(world);
+    //_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    //_pImmediateContext->DrawIndexed(cubeIndex, 0, 0);
 
-    // Renders a third cube - second planet
-    world = XMLoadFloat4x4(&_world2);
-    cb.mWorld = XMMatrixTranspose(world);
-    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-    _pImmediateContext->DrawIndexed(cubeIndex, 0, 0);
+    //// Renders a third cube - second planet
+    //world = XMLoadFloat4x4(&_world2);
+    //cb.mWorld = XMMatrixTranspose(world);
+    //_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    //_pImmediateContext->DrawIndexed(cubeIndex, 0, 0);
 
     //// Switch to pyramid buffers
     //_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBufferPyramid, &stride, &offset);

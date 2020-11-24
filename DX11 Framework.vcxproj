@@ -377,18 +377,20 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DX11 Framework.cpp" />
+    <ClCompile Include="OBJLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="DX11 Framework.fx">
+    <None Include="DX11 Framework.fx">
       <FileType>Document</FileType>
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</EnableDebuggingInformation>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </FxCompile>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="OBJLoader.h" />
     <CLInclude Include="resource.h" />
+    <ClInclude Include="Structures.h" />
     <ResourceCompile Include="DX11 Framework.rc" />
   </ItemGroup>
   <ItemGroup>

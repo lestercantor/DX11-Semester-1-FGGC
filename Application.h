@@ -9,15 +9,10 @@
 #include <time.h>
 #include "resource.h"
 #include "DDSTextureLoader.h"
+#include "Structures.h"
+#include "OBJLoader.h"
 
 using namespace DirectX;
-
-struct SimpleVertex
-{
-    XMFLOAT3 Pos;
-	XMFLOAT3 Normal;
-	XMFLOAT2 TexC;
-};
 
 struct ConstantBuffer
 {
@@ -101,6 +96,8 @@ private:
 	// Texture variables
 	ID3D11ShaderResourceView* _pTextureRV = nullptr;
 	ID3D11SamplerState* _pSamplerLinear = nullptr;
+
+	MeshData objMeshData;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);

@@ -1,9 +1,11 @@
 ﻿  Application.cpp
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(744,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(744,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(745,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(745,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(716,9): warning C4101: 'matScale': unreferenced local variable
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(715,9): warning C4101: 'matRota': unreferenced local variable
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(714,9): warning C4101: 'matTrans': unreferenced local variable
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(747,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(747,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(748,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(748,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(719,9): warning C4101: 'matScale': unreferenced local variable
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(718,9): warning C4101: 'matRota': unreferenced local variable
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(717,9): warning C4101: 'matTrans': unreferenced local variable
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(787,10): warning C4189: 'offset': local variable is initialized but not referenced
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(786,10): warning C4189: 'stride': local variable is initialized but not referenced
   DX11 Framework.vcxproj -> C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Debug\DX11 Framework.exe
