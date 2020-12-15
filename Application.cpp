@@ -70,22 +70,20 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     }
 
 	// Initialize the world matrix
-	XMStoreFloat4x4(&_sun, XMMatrixIdentity());
-    objMeshData = OBJLoader::Load("sphere.obj", _pd3dDevice);
+	XMStoreFloat4x4(&_world, XMMatrixIdentity());
+    //objMeshData = OBJLoader::Load("sphere.obj", _pd3dDevice);
     //XMStoreFloat4x4(&_plane, XMMatrixIdentity());
 
     // Specular light position
     eyePosW = XMFLOAT3(0.1f, 10.0f, 0.0f);
 
-    // Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.1f, 5.0f, 0.0f, 0.0f);
-	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    // Initialize the camera object
+    _camera = Camera(
+        XMFLOAT3(0.1f, 10.0f, 0.0f), 
+        XMFLOAT3(0.0f, 0.0f, 0.0f), 
+        XMFLOAT3(0.0f, 1.0f, 0.0f),
+        _WindowWidth, _WindowHeight, 0.01f, 100.0f);
 
-	XMStoreFloat4x4(&_view, XMMatrixLookAtLH(Eye, At, Up));
-
-    // Initialize the projection matrix
-	XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _WindowWidth / (FLOAT) _WindowHeight, 0.01f, 100.0f));
 
     // Light direction from surface (XYZ)
     lightDirection = XMFLOAT3(0.25f, 0.5f, -1.0f);
@@ -203,25 +201,6 @@ HRESULT Application::InitVertexBuffer()
     // Create vertex buffer for cube
     SimpleVertex cubeVertices[] =
     {
-        /*
-        // 0
-        { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT3(-0.25, 0.25, 0.5), XMFLOAT2(0.0f, 0.0f) },
-        // 1
-        { XMFLOAT3( 1.0f, 1.0f, 1.0f ), XMFLOAT3(0.4, 0.4, 0.2), XMFLOAT2(1.0f, 0.0f) },
-        // 2
-        { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT3(-0.4, -0.4, 0.2), XMFLOAT2(0.0f, 1.0f) },
-        // 3
-        { XMFLOAT3( 1.0f, -1.0f, 1.0f ), XMFLOAT3(0.25, -0.25, 0.5), XMFLOAT2(1.0f, 1.0f) },
-        // 4
-        { XMFLOAT3( 1.0f, -1.0f, -1.0f ), XMFLOAT3(0.4, -0.4, -0.2), XMFLOAT2(1.0f, 1.0f) },
-        // 5
-        { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT3(0.25, 0.25, -0.5), XMFLOAT2(0.0f, 1.0f) },
-        // 6
-        { XMFLOAT3( -1.0f, -1.0f, -1.0f ), XMFLOAT3(-0.5, -0.5, -0.25), XMFLOAT2(1.0f, 0.0f) },
-        // 7
-        { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT3(-0.4, 0.4, -0.2), XMFLOAT2(1.0f, 1.0f) },
-        */
-
         // Face 1
         { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-0.4, -0.4, 0.2), XMFLOAT2(0.0f, 0.0f) }, // 0
         { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(0.25, -0.25, 0.5), XMFLOAT2(1.0f, 0.0f) }, // 1
@@ -666,8 +645,6 @@ HRESULT Application::InitDevice()
 	bd.CPUAccessFlags = 0;
     hr = _pd3dDevice->CreateBuffer(&bd, nullptr, &_pConstantBuffer);
 
-
-
     if (FAILED(hr))
         return hr;
 
@@ -714,6 +691,8 @@ void Application::Cleanup()
 
 void Application::Update()
 {
+    _camera.Update();
+
     int matTrans;
     int matRota;
     int matScale;
@@ -742,7 +721,7 @@ void Application::Update()
     //
     // Animate the cube
     //
-    XMStoreFloat4x4(&_sun, XMMatrixRotationX(t));
+    XMStoreFloat4x4(&_world, XMMatrixRotationX(t));
     // Animate planets
     XMStoreFloat4x4(&_world1, XMMatrixRotationY(t * 1.3) * XMMatrixTranslation(15.0f, 0.0f, 1.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 1.1));
     XMStoreFloat4x4(&_world2, XMMatrixRotationY(t * 1.4) * XMMatrixTranslation(11.0f, 0.0f, 1.1f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(t * 1.2));
@@ -786,9 +765,9 @@ void Application::Draw()
     UINT stride = sizeof(SimpleVertex);
     UINT offset = 0;
 
-	XMMATRIX world = XMLoadFloat4x4(&_sun);
-	XMMATRIX view = XMLoadFloat4x4(&_view);
-	XMMATRIX projection = XMLoadFloat4x4(&_projection);
+	XMMATRIX world = XMLoadFloat4x4(&_world);
+	XMMATRIX view = XMLoadFloat4x4(&_camera.getViewMatrix());
+	XMMATRIX projection = XMLoadFloat4x4(&_camera.getProjectionMatrix());
     //
     // Update variables
     //

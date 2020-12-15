@@ -11,6 +11,7 @@
 #include "DDSTextureLoader.h"
 #include "Structures.h"
 #include "OBJLoader.h"
+#include "Camera.h"
 
 using namespace DirectX;
 
@@ -65,10 +66,8 @@ private:
 	int planeIndex = 96;
 
 	ID3D11Buffer*           _pConstantBuffer;
-	XMFLOAT4X4              _sun, _world1, _world2, _moon1, _moon2, _moon3, _moon4, _plane;
+	XMFLOAT4X4              _world, _world1, _world2, _moon1, _moon2, _moon3, _moon4, _plane;
 	XMFLOAT4X4				_asteroidBelt[100];
-	XMFLOAT4X4              _view;
-	XMFLOAT4X4              _projection;
 
 	// Set up the depth/stencil buffer 
 	ID3D11DepthStencilView* _depthStencilView;
@@ -96,9 +95,11 @@ private:
 	// Texture variables
 	ID3D11ShaderResourceView* _pTextureRV = nullptr;
 	ID3D11SamplerState* _pSamplerLinear = nullptr;
-
+	
 	MeshData objMeshData;
-
+	
+	Camera _camera;
+	
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
 	HRESULT InitDevice();

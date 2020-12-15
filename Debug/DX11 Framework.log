@@ -1,11 +1,19 @@
 ﻿  Application.cpp
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(747,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(747,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(748,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(748,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(719,9): warning C4101: 'matScale': unreferenced local variable
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(718,9): warning C4101: 'matRota': unreferenced local variable
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(717,9): warning C4101: 'matTrans': unreferenced local variable
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(787,10): warning C4189: 'offset': local variable is initialized but not referenced
-C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(786,10): warning C4189: 'stride': local variable is initialized but not referenced
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(85,23): warning C4244: 'argument': conversion from 'UINT' to 'FLOAT', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(85,9): warning C4244: 'argument': conversion from 'UINT' to 'FLOAT', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(726,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(726,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(727,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(727,157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(698,9): warning C4101: 'matScale': unreferenced local variable
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(697,9): warning C4101: 'matRota': unreferenced local variable
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(696,9): warning C4101: 'matTrans': unreferenced local variable
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(769): warning C4238: nonstandard extension used: class rvalue used as lvalue
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(770): warning C4238: nonstandard extension used: class rvalue used as lvalue
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(769,55): warning C4238: nonstandard extension used: class rvalue used as lvalue
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(770,67): warning C4238: nonstandard extension used: class rvalue used as lvalue
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(766,10): warning C4189: 'offset': local variable is initialized but not referenced
+C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Application.cpp(765,10): warning C4189: 'stride': local variable is initialized but not referenced
+  DX11 Framework.cpp
+  Generating Code...
   DX11 Framework.vcxproj -> C:\Users\leste\OneDrive - Staffordshire University\FGGC\DX11 Framework 2018\Debug\DX11 Framework.exe
