@@ -74,9 +74,6 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     //objMeshData = OBJLoader::Load("sphere.obj", _pd3dDevice);
     //XMStoreFloat4x4(&_plane, XMMatrixIdentity());
 
-    // Specular light position
-    eyePosW = XMFLOAT3(0.1f, 10.0f, 0.0f);
-
     // Initialize the camera object
     _camera = Camera(
         XMFLOAT3(0.1f, 10.0f, 0.0f), 
@@ -84,6 +81,11 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
         XMFLOAT3(0.0f, 1.0f, 0.0f),
         _WindowWidth, _WindowHeight, 0.01f, 100.0f);
 
+    _camera2 = Camera(
+        XMFLOAT3(0.0f, 0.0f, -3.0f),
+        XMFLOAT3(0.0f, 0.0f, 0.0f),
+        XMFLOAT3(0.0f, 1.0f, 0.0f),
+        _WindowWidth, _WindowHeight, 0.01f, 100.0f);
 
     // Light direction from surface (XYZ)
     lightDirection = XMFLOAT3(0.25f, 0.5f, -1.0f);
@@ -692,6 +694,7 @@ void Application::Cleanup()
 void Application::Update()
 {
     _camera.Update();
+    _camera2.Update();
 
     int matTrans;
     int matRota;
@@ -745,12 +748,12 @@ void Application::Update()
     
     if (GetAsyncKeyState(VK_DOWN)) 
         _pImmediateContext->RSSetState(_solid);
-    
-    if (GetAsyncKeyState(VK_LEFT)) {
-        for (int i = 0; i < 100; i++) {
-            XMStoreFloat4x4(&_asteroidBelt[i], XMLoadFloat4x4(&_asteroidBelt[i]) * XMMatrixRotationY(-t) * XMMatrixRotationY(-t));
-        }
-    }
+
+    //if (GetAsyncKeyState(VK_LEFT)) {
+    //    for (int i = 0; i < 100; i++) {
+    //        XMStoreFloat4x4(&_asteroidBelt[i], XMLoadFloat4x4(&_asteroidBelt[i]) * XMMatrixRotationY(-t) * XMMatrixRotationY(-t));
+    //    }
+    //}
 }
 
 void Application::Draw()
@@ -766,8 +769,19 @@ void Application::Draw()
     UINT offset = 0;
 
 	XMMATRIX world = XMLoadFloat4x4(&_world);
-	XMMATRIX view = XMLoadFloat4x4(&_camera.getViewMatrix());
-	XMMATRIX projection = XMLoadFloat4x4(&_camera.getProjectionMatrix());
+    XMMATRIX view;
+    XMMATRIX projection;
+
+    if (GetAsyncKeyState(0x31))
+    {
+        view = XMLoadFloat4x4(&_camera.getViewMatrix());
+        projection = XMLoadFloat4x4(&_camera.getProjectionMatrix());
+    }
+    else
+    {
+        view = XMLoadFloat4x4(&_camera2.getViewMatrix());
+        projection = XMLoadFloat4x4(&_camera2.getProjectionMatrix());
+    }
     //
     // Update variables
     //
@@ -787,8 +801,7 @@ void Application::Draw()
     cb.SpecularLight = specularLight;
     cb.SpecularMtrl = specularMaterial;
     cb.SpecularPower = specularPower;
-    cb.EyePosW = eyePosW;
-
+    cb.EyePosW = _camera.getEye();
 
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 

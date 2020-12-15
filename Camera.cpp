@@ -33,14 +33,10 @@ void Camera::Update()
 	XMVECTOR At = XMVectorSet(_at.x, _at.y, _at.z, 0.0f);
 	XMVECTOR Up = XMVectorSet(_up.x, _up.y, _at.z, 0.0f);
 
-	//XMVECTOR eyeVector = XMLoadFloat4(&Eye);
-	//XMVECTOR atVector = XMLoadFloat4(&At);
-	//XMVECTOR upVector = XMLoadFloat4(&Up);
-
 	XMStoreFloat4x4(&_view, XMMatrixLookAtLH(Eye, At, Up));
 
 	// Initialize the projection matrix
-	//XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / _windowHeight, _nearDepth, _farDepth));
+	XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / _windowHeight, _nearDepth, _farDepth));
 }
 
 XMFLOAT4X4 Camera::getViewProjectionMatrix()

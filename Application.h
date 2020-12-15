@@ -99,6 +99,7 @@ private:
 	MeshData objMeshData;
 	
 	Camera _camera;
+	Camera _camera2;
 	
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
