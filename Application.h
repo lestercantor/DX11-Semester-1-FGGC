@@ -50,24 +50,8 @@ private:
 	ID3D11PixelShader*      _pPixelShader;
 	ID3D11InputLayout*      _pVertexLayout;
 
-	// Vertex and index buffers for cube
-	ID3D11Buffer*           _pVertexBufferCube;
-	ID3D11Buffer*           _pIndexBufferCube;
-	int cubeIndex = 36;
-
-	// Vertex and index buffers for pyramid
-	ID3D11Buffer* _pVertexBufferPyramid;
-	ID3D11Buffer* _pIndexBufferPyramid;
-	int pyramidIndex = 18;
-
-	// Vertex and index buffers for flat plane
-	ID3D11Buffer* _pVertexBufferPlane;
-	ID3D11Buffer* _pIndexBufferPlane;
-	int planeIndex = 96;
-
 	ID3D11Buffer*           _pConstantBuffer;
-	XMFLOAT4X4              _world, _world1, _world2, _moon1, _moon2, _moon3, _moon4, _plane;
-	XMFLOAT4X4				_asteroidBelt[100];
+	XMFLOAT4X4				_world;
 
 	// Set up the depth/stencil buffer 
 	ID3D11DepthStencilView* _depthStencilView;
@@ -97,7 +81,8 @@ private:
 	ID3D11SamplerState* _pSamplerLinear = nullptr;
 	
 	MeshData objMeshData;
-	
+	MeshData _plane;
+
 	Camera _camera;
 	Camera _camera2;
 	
@@ -107,8 +92,6 @@ private:
 	void Cleanup();
 	HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 	HRESULT InitShadersAndInputLayout();
-	HRESULT InitVertexBuffer();
-	HRESULT InitIndexBuffer();
 
 	UINT _WindowHeight;
 	UINT _WindowWidth;
